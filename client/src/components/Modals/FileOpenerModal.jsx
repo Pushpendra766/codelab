@@ -23,7 +23,7 @@ const FileOpenerModal = ({ isModalOpen, setIsModalOpen }) => {
             <hr />
             {files.map((file, i) => {
               return (
-                <div>
+                <div key={i}>
                   <div className="flex justify-between pb-2">
                     {i + 1}. {file}
                     <div className="flex gap-4">
