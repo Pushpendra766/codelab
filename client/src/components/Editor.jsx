@@ -15,7 +15,6 @@ function Editor(props) {
   const { displayName, language, code, handleChange } = props;
   const [minimize, setMinimize] = useState(false);
   const onChange = React.useCallback((value, viewUpdate) => {
-    console.log("value:", value);
     handleChange(value);
   }, []);
   const lang =

@@ -11,7 +11,7 @@ const FileInfoBar = ({setIsModalOpen}) => {
     setIsModalOpen(true);
   };
   return (
-    <div className="bg-[#205295] px-10 py-3 mb-2 flex justify-between">
+    <div className="bg-[#205295] px-10 py-3 flex justify-between">
       <div className="text-white flex gap-10">
         <button>
           <AiFillFolderOpen size={25} onClick={handleOpenModal}/>
