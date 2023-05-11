@@ -6,17 +6,20 @@ import CodeSection from "./components/CodeSection.jsx";
 import Output from "./components/Output.jsx";
 import FileInfoBar from "./components/FileInfoBar.jsx";
 import FileOpenerModal from "./components/Modals/FileOpenerModal.jsx"
+import LoginModal from "./components/Modals/LoginModal.jsx";
 
 function App() {
   const [srcDoc, setSrcDoc] = useState();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFileModalOpen, setIsFileModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   return (
     <div>
-      <Navbar />
-      <FileInfoBar setIsModalOpen={setIsModalOpen}/>
+      <Navbar setIsModalOpen={setIsLoginModalOpen}/>
+      <FileInfoBar setIsModalOpen={setIsFileModalOpen}/>
       <CodeSection setSrcDoc={setSrcDoc}/>
       <Output srcDoc={srcDoc}/>
-      <FileOpenerModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+      <FileOpenerModal isModalOpen={isFileModalOpen} setIsModalOpen={setIsFileModalOpen}/>
+      <LoginModal isModalOpen={isLoginModalOpen} setIsModalOpen={setIsLoginModalOpen}/>
     </div>
   );
 }
