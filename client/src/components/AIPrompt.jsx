@@ -41,9 +41,17 @@ const AIPrompt = (props) => {
     const html = response.split("```")[1];
     const css = response.split("```")[3];
     const js = response.split("```")[5];
-    setHtml(html);
-    setCss(css);
-    setJavascript(js);
+    if (html && html[0] === "h") {
+      // to handel case when the code have extra html, css and js written in it
+      setHtml(html.slice(4));
+      setCss(css.slice(3));
+      setJavascript(js.slice(10));
+    } else {
+      setHtml(html);
+      setCss(css);
+      setJavascript(js);
+    }
+
     setSrcDoc(`
       <html>
         <body>${html}</body>
