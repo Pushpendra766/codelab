@@ -34,7 +34,7 @@ function Editor(props) {
   };
 
   return (
-    <div className={`${minimize ? "w-1/12" : "w-full"}`}>
+    <div className={`${minimize ? "w-2/12" : "w-full"}`}>
       <Toaster />
       <div className="flex justify-between gap-4 px-2">
         <div className="flex gap-2">
@@ -47,7 +47,7 @@ function Editor(props) {
           <button onClick={handleCopyCode} className="hover:text-[#5e5e5e]">
             <MdOutlineContentCopy size={20} />
           </button>
-          <button
+          <button className="hidden lg:flex"
             onClick={() => {
               setMinimize(!minimize);
             }}
