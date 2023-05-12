@@ -4,6 +4,7 @@ import { Configuration, OpenAIApi } from "openai";
 import { javascript } from "@codemirror/lang-javascript";
 import UseAnimations from "react-useanimations";
 import activity from "react-useanimations/lib/activity";
+import toast, { Toaster } from "react-hot-toast";
 
 const AIPrompt = (props) => {
   const { setHtml, setCss, setJavascript, setSrcDoc } = props;
@@ -37,6 +38,19 @@ const AIPrompt = (props) => {
         response = res.data.choices[0].message.content;
         // console.log(res.data.choices[0].finish_reason);
         setCode();
+      })
+      .catch((error) => {
+        setLoading(false);
+        if (error.response.status === 401) {
+          toast.error("Invalid API key!", {
+            duration: 2000,
+          });
+        } else {
+          toast.error("Something went wrong! Check console.", {
+            duration: 2000,
+          });
+          console.log("Error : ", error);
+        }
       });
   };
 
@@ -73,7 +87,7 @@ const AIPrompt = (props) => {
         <input
           type="text"
           className="border-2 border-[#2C74B3] rounded-md pl-2 w-full"
-          placeholder="What do you want to generate ?"
+          placeholder="Describe the element in one/multiple words ?"
           value={prompt}
           onChange={handlePromptChange}
         />
@@ -82,7 +96,9 @@ const AIPrompt = (props) => {
             loading && "cursor-wait"
           }`}
           onClick={() => {
-            prompt && searchCode(prompt);
+            prompt
+              ? searchCode(prompt)
+              : toast("Please enter query first!", { duration: 1500 });
           }}
         >
           {loading ? (
@@ -94,6 +110,7 @@ const AIPrompt = (props) => {
           )}
         </button>
       </div>
+      <Toaster />
     </div>
   );
 };

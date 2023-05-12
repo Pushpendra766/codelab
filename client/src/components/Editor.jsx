@@ -11,6 +11,7 @@ import { IoLogoJavascript } from "react-icons/io";
 import { FiMinimize2 } from "react-icons/fi";
 import { FiMaximize } from "react-icons/fi";
 import { MdOutlineContentCopy } from "react-icons/md";
+import toast, { Toaster } from "react-hot-toast";
 
 function Editor(props) {
   const { displayName, language, code, handleChange } = props;
@@ -23,12 +24,18 @@ function Editor(props) {
     (language === "css" && css({ css: true })) ||
     (language === "js" && javascript({ jsx: true }));
 
-  const handleCopyCode = ()=>{
-    navigator.clipboard.writeText(code);
-  }
+  const handleCopyCode = () => {
+    if (code) {
+      navigator.clipboard.writeText(code);
+      toast.success("Copied to clipboard!");
+    }else{
+      toast.error("Nothing to copy!");
+    }
+  };
 
   return (
     <div className={`${minimize ? "w-1/12" : "w-full"}`}>
+      <Toaster />
       <div className="flex justify-between gap-4 px-2">
         <div className="flex gap-2">
           {language === "html" && <ImHtmlFive size={20} />}
@@ -38,7 +45,7 @@ function Editor(props) {
         </div>
         <div className="flex gap-4">
           <button onClick={handleCopyCode} className="hover:text-[#5e5e5e]">
-            <MdOutlineContentCopy size={20}/>
+            <MdOutlineContentCopy size={20} />
           </button>
           <button
             onClick={() => {
