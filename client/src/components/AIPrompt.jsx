@@ -79,15 +79,15 @@ const AIPrompt = (props) => {
   };
 
   return (
-    <div className="py-3 bg-[#62CDFF] mb-2 px-10 text-[#144272]">
-      <div className="flex gap-4 w-2/3 mx-auto justify-between">
-        <span className="text-lg font-semibold whitespace-nowrap">
+    <div className="py-2 sm:py-3 bg-[#62CDFF] mb-2 px-4 sm:px-10 text-[#144272]">
+      <div className="flex gap-2 sm:gap-4 lg:w-2/3 md:w-10/12 mx-auto justify-between">
+        <span className="text-base sm:text-lg font-semibold whitespace-nowrap">
           AI Prompt :{" "}
         </span>
         <input
           type="text"
-          className="border-2 border-[#2C74B3] rounded-md pl-2 w-full"
-          placeholder="Describe the element in one/multiple words ?"
+          className="text-sm sm:text-base border-2 border-[#2C74B3] rounded-md pl-2 w-full"
+          placeholder="Describe element in words."
           value={prompt}
           onChange={handlePromptChange}
         />
@@ -104,7 +104,7 @@ const AIPrompt = (props) => {
           {loading ? (
             <UseAnimations animation={activity} strokeColor="white" />
           ) : (
-            <span className="flex gap-2">
+            <span className="flex gap-2 text-sm sm:text-base">
               Go <SiCodemagic className="mt-1" />
             </span>
           )}
