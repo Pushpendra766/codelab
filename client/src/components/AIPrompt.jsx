@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { SiCodemagic } from "react-icons/si";
 import { Configuration, OpenAIApi } from "openai";
 import { javascript } from "@codemirror/lang-javascript";
+import UseAnimations from "react-useanimations";
+import activity from "react-useanimations/lib/activity";
 
 const AIPrompt = (props) => {
   const { setHtml, setCss, setJavascript, setSrcDoc } = props;
@@ -11,7 +13,7 @@ const AIPrompt = (props) => {
     })
   );
   const [prompt, setPrompt] = useState();
-
+  const [loading, setLoading] = useState(false);
   const handlePromptChange = (e) => {
     setPrompt(e.target.value);
   };
@@ -19,7 +21,8 @@ const AIPrompt = (props) => {
   let response;
 
   const searchCode = (prompt) => {
-    console.log("Prompt : ", prompt);
+    setLoading(true);
+    // console.log("Prompt : ", prompt);
     openai
       .createChatCompletion({
         model: "gpt-3.5-turbo",
@@ -32,7 +35,7 @@ const AIPrompt = (props) => {
       })
       .then((res) => {
         response = res.data.choices[0].message.content;
-        console.log(res.data.choices[0].finish_reason);
+        // console.log(res.data.choices[0].finish_reason);
         setCode();
       });
   };
@@ -58,7 +61,7 @@ const AIPrompt = (props) => {
         <style>${css}</style>
         <script>${javascript}</script>
       </html>`);
-    console.log(html, css, js);
+    setLoading(false);
   };
 
   return (
@@ -75,12 +78,20 @@ const AIPrompt = (props) => {
           onChange={handlePromptChange}
         />
         <button
-          className="text-[#ffffff] bg-[#2C74B3] px-4 py-1 rounded-full font-semibold hover:bg-[#205295] flex gap-2"
+          className={`text-[#ffffff] bg-[#2C74B3] px-4 py-1 rounded-full font-semibold hover:bg-[#205295] flex gap-2 ${
+            loading && "cursor-wait"
+          }`}
           onClick={() => {
             prompt && searchCode(prompt);
           }}
         >
-          Go <SiCodemagic className="mt-1" />
+          {loading ? (
+            <UseAnimations animation={activity} strokeColor="white" />
+          ) : (
+            <span className="flex gap-2">
+              Go <SiCodemagic className="mt-1" />
+            </span>
+          )}
         </button>
       </div>
     </div>

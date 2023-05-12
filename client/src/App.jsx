@@ -19,7 +19,7 @@ function App() {
   return (
     <div>
       <Navbar setIsModalOpen={setIsLoginModalOpen} />
-      {/* <FileInfoBar setIsModalOpen={setIsFileModalOpen}/> */}
+      <FileInfoBar setIsModalOpen={setIsFileModalOpen}/>
       <AIPrompt
         setHtml={setHtml}
         setCss={setCss}

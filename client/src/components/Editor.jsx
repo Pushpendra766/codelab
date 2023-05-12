@@ -10,6 +10,7 @@ import { DiCss3 } from "react-icons/di";
 import { IoLogoJavascript } from "react-icons/io";
 import { FiMinimize2 } from "react-icons/fi";
 import { FiMaximize } from "react-icons/fi";
+import { MdOutlineContentCopy } from "react-icons/md";
 
 function Editor(props) {
   const { displayName, language, code, handleChange } = props;
@@ -21,6 +22,11 @@ function Editor(props) {
     (language === "html" && html({ html: true })) ||
     (language === "css" && css({ css: true })) ||
     (language === "js" && javascript({ jsx: true }));
+
+  const handleCopyCode = ()=>{
+    navigator.clipboard.writeText(code);
+  }
+
   return (
     <div className={`${minimize ? "w-1/12" : "w-full"}`}>
       <div className="flex justify-between gap-4 px-2">
@@ -30,13 +36,18 @@ function Editor(props) {
           {language === "js" && <IoLogoJavascript size={20} />}
           {displayName}
         </div>
-        <button
-          onClick={() => {
-            setMinimize(!minimize);
-          }}
-        >
-          {minimize === true ? <FiMaximize /> : <FiMinimize2 />}
-        </button>
+        <div className="flex gap-4">
+          <button onClick={handleCopyCode} className="hover:text-[#5e5e5e]">
+            <MdOutlineContentCopy size={20}/>
+          </button>
+          <button
+            onClick={() => {
+              setMinimize(!minimize);
+            }}
+          >
+            {minimize === true ? <FiMaximize /> : <FiMinimize2 />}
+          </button>
+        </div>
       </div>
       <CodeMirror
         value={code}
