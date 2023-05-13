@@ -16,10 +16,17 @@ function App() {
   const [javascript, setJavascript] = useState();
   const [isFileModalOpen, setIsFileModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignup, setIsSignup] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <div>
-      <Navbar setIsModalOpen={setIsLoginModalOpen} />
-      <FileInfoBar setIsModalOpen={setIsFileModalOpen}/>
+      <Navbar
+        setIsModalOpen={setIsLoginModalOpen}
+        setIsSignup={setIsSignup}
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+      />
+      <FileInfoBar setIsModalOpen={setIsFileModalOpen} />
       <AIPrompt
         setHtml={setHtml}
         setCss={setCss}
@@ -43,6 +50,9 @@ function App() {
       <LoginModal
         isModalOpen={isLoginModalOpen}
         setIsModalOpen={setIsLoginModalOpen}
+        isSignup={isSignup}
+        setIsSignup={setIsSignup}
+        setIsLoggedIn={setIsLoggedIn}
       />
     </div>
   );
