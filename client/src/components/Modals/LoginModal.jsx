@@ -18,17 +18,20 @@ const LoginModal = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setIsLoggingIn(true);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         setIsModalOpen(false);
         toast.success("Logged in Successfully!");
         setIsLoggedIn(true);
+        setIsLoggingIn(false);
       })
       .catch((error) => {
         console.log(error);
@@ -37,6 +40,7 @@ const LoginModal = ({
         } else {
           toast.error("Invalid email or password!");
         }
+        setIsLoggingIn(false);
       });
   };
 
@@ -121,7 +125,7 @@ const LoginModal = ({
                   className="text-[#ffffff] bg-[#2C74B3] px-4 py-2 rounded-full font-semibold hover:bg-[#205295]"
                   type="submit"
                 >
-                  Login
+                  {isLoggingIn ? "Logging in..." : "Login"}
                 </button>
               </form>
             )}
