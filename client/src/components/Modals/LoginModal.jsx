@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Modal from "./Modal";
 import { GrClose } from "react-icons/gr";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  setPersistence,
-  browserSessionPersistence,
 } from "firebase/auth";
 import { auth } from "../../firebase";
 import toast, { Toaster } from "react-hot-toast";
@@ -34,15 +32,11 @@ const LoginModal = ({
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Invalid email or password!");
-      });
-    setPersistence(auth, browserSessionPersistence)
-      .then(() => {
-        console.log("Persistent");
-        
-      })
-      .catch((error) => {
-        console.log(error);
+        if (error.code === "auth/network-request-failed") {
+          toast.error("Network error!");
+        } else {
+          toast.error("Invalid email or password!");
+        }
       });
   };
 
@@ -68,7 +62,6 @@ const LoginModal = ({
         });
     }
   };
-
   return (
     <div className="container mx-auto">
       <Toaster />

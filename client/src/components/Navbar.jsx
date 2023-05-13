@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SiApostrophe } from "react-icons/si";
 import { BiUserCircle } from "react-icons/bi";
 import { CgLogOut } from "react-icons/cg";
-import { signOut } from "firebase/auth";
+import {
+  signOut,
+  setPersistence,
+  browserLocalPersistence,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import toast, { Toaster } from "react-hot-toast";
+import { BiUserCheck } from "react-icons/bi";
 
 const Navbar = ({ setIsModalOpen, setIsSignup, isLoggedIn, setIsLoggedIn }) => {
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const handleOpen = (mode) => {
     if (mode === "signup") {
       setIsSignup(true);
@@ -27,7 +34,22 @@ const Navbar = ({ setIsModalOpen, setIsSignup, isLoggedIn, setIsLoggedIn }) => {
         toast.error("Something went wrong!");
       });
   };
-
+  useEffect(() => {
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            setUserEmail(user.email);
+            setIsLoggedIn(true);
+          } else {
+            setIsLoggedIn(false);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
   return (
     <div>
       <Toaster />
@@ -60,12 +82,17 @@ const Navbar = ({ setIsModalOpen, setIsSignup, isLoggedIn, setIsLoggedIn }) => {
         )}
       </div>
       {openDropdown && (
-        <span className="absolute right-2 sm:right-10 bg-[#ffffff] py-2 px-4 rounded-md ">
-          <button className="flex gap-2" onClick={handleLogout}>
+        <div className="absolute right-2 sm:right-10 bg-[#ffffff] rounded-md">
+          <p className="flex gap-2 py-3 hover:cursor-default px-3">
+            <BiUserCheck size={23} color="#16a34a" />
+            {userEmail}
+          </p>
+          <hr/>
+          <button className="flex gap-2 text-base pl-6 py-2 font-semibold w-full bg-[#ff0000] text-[#ffffff] rounded-b-md" onClick={handleLogout}>
             <CgLogOut size={20} className="mt-1" />
             Logout{" "}
           </button>
-        </span>
+        </div>
       )}
     </div>
   );
