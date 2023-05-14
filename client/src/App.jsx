@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./init.js";
 import "./App.css";
 import Navbar from "./components/Navbar.jsx";
@@ -8,6 +8,8 @@ import FileInfoBar from "./components/FileInfoBar.jsx";
 import FileOpenerModal from "./components/Modals/FileOpenerModal.jsx";
 import LoginModal from "./components/Modals/LoginModal.jsx";
 import AIPrompt from "./components/AIPrompt.jsx";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase.js";
 
 function App() {
   const [srcDoc, setSrcDoc] = useState();
@@ -18,6 +20,18 @@ function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserId(user.uid);
+      } else {
+        console.log("User logged out..");
+      }
+    });
+  }, []);
+
   return (
     <div>
       <Navbar
@@ -26,7 +40,13 @@ function App() {
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
       />
-      <FileInfoBar setIsModalOpen={setIsFileModalOpen} />
+      <FileInfoBar
+        setIsModalOpen={setIsFileModalOpen}
+        html={html}
+        css={css}
+        javascript={javascript}
+        currentUserId={currentUserId}
+      />
       <AIPrompt
         setHtml={setHtml}
         setCss={setCss}
@@ -46,6 +66,10 @@ function App() {
       <FileOpenerModal
         isModalOpen={isFileModalOpen}
         setIsModalOpen={setIsFileModalOpen}
+        currentUserId={currentUserId}
+        setHtml={setHtml}
+        setCss={setCss}
+        setJavascript={setJavascript}
       />
       <LoginModal
         isModalOpen={isLoginModalOpen}

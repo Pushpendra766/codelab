@@ -1,14 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { VscFileCode } from "react-icons/vsc";
 import { MdEdit, MdDone } from "react-icons/md";
 import { BsFillCloudArrowUpFill } from "react-icons/bs";
 import { AiFillFolderOpen } from "react-icons/ai";
+import {
+  doc,
+  updateDoc,
+  collection,
+  serverTimestamp,
+  arrayUnion,
+} from "firebase/firestore";
+import { db, auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import toast, { Toaster } from "react-hot-toast";
 
-const FileInfoBar = ({ setIsModalOpen }) => {
+const FileInfoBar = ({
+  setIsModalOpen,
+  html,
+  css,
+  javascript,
+  currentUserId,
+}) => {
   const [filename, setFilename] = useState("Untitled");
   const [isEdit, setIsEdit] = useState(false);
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
+  };
+  const handleSave = async () => {
+    const usersRef = collection(db, "users");
+
+    const userDocRef = doc(usersRef, currentUserId);
+    console.log(currentUserId);
+    updateDoc(userDocRef, {
+      file: arrayUnion({
+        filename: filename,
+        html: html,
+        css: css,
+        js: javascript,
+        createdAt: new Date(),
+      }),
+    })
+      .then(() => {
+        toast.success("File Saved!");
+        console.log("File added to user:", currentUserId);
+      })
+      .catch((error) => {
+        toast.error("Something went wrong!");
+        console.error("Error adding file to user:", error);
+      });
   };
   return (
     <div className="bg-[#205295] px-4 sm:px-10 py-2 sm:py-3 flex justify-between">
@@ -35,7 +75,10 @@ const FileInfoBar = ({ setIsModalOpen }) => {
         </div>
       </div>
       <div>
-        <button className="text-[#ffffff] bg-[#16a34a] px-3 sm:px-5 text-sm sm:text-base py-1 rounded-full font-semibold hover:bg-[#55ad33] flex gap-2 sm:gap-3">
+        <button
+          className="text-[#ffffff] bg-[#16a34a] px-3 sm:px-5 text-sm sm:text-base py-1 rounded-full font-semibold hover:bg-[#55ad33] flex gap-2 sm:gap-3"
+          onClick={handleSave}
+        >
           Save <BsFillCloudArrowUpFill size={24} />
         </button>
       </div>
