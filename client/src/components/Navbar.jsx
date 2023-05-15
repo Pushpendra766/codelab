@@ -12,7 +12,7 @@ import { auth } from "../firebase";
 import toast, { Toaster } from "react-hot-toast";
 import { BiUserCheck } from "react-icons/bi";
 
-const Navbar = ({ setIsModalOpen, setIsSignup, isLoggedIn, setIsLoggedIn }) => {
+const Navbar = ({ setIsModalOpen, setIsSignup, isLoggedIn, setIsLoggedIn, resetEditor }) => {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const handleOpen = (mode) => {
@@ -29,6 +29,7 @@ const Navbar = ({ setIsModalOpen, setIsSignup, isLoggedIn, setIsLoggedIn }) => {
         toast.success("Logged out!");
         setIsLoggedIn(false);
         setOpenDropdown(false);
+        resetEditor();
       })
       .catch((error) => {
         toast.error("Something went wrong!");

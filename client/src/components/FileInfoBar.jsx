@@ -3,16 +3,9 @@ import { VscFileCode } from "react-icons/vsc";
 import { MdEdit, MdDone } from "react-icons/md";
 import { BsFillCloudArrowUpFill } from "react-icons/bs";
 import { AiFillFolderOpen } from "react-icons/ai";
-import {
-  doc,
-  updateDoc,
-  collection,
-  serverTimestamp,
-  arrayUnion,
-} from "firebase/firestore";
-import { db, auth } from "../firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import toast, { Toaster } from "react-hot-toast";
+import { doc, updateDoc, collection, arrayUnion } from "firebase/firestore";
+import { db } from "../firebase";
+import toast from "react-hot-toast";
 
 const FileInfoBar = ({
   setIsModalOpen,
@@ -20,35 +13,46 @@ const FileInfoBar = ({
   css,
   javascript,
   currentUserId,
+  isLoggedIn,
+  fetchFiles,
+  currentFileName,
+  setCurrentFileName,
 }) => {
-  const [filename, setFilename] = useState("Untitled");
   const [isEdit, setIsEdit] = useState(false);
 
   const handleOpenModal = () => {
-    setIsModalOpen(true);
+    if (isLoggedIn) {
+      setIsModalOpen(true);
+    } else {
+      toast("Sign in to open the files!");
+    }
   };
   const handleSave = async () => {
-    const usersRef = collection(db, "users");
-
-    const userDocRef = doc(usersRef, currentUserId);
-    console.log(currentUserId);
-    updateDoc(userDocRef, {
-      file: arrayUnion({
-        filename: filename,
-        html: html,
-        css: css,
-        js: javascript,
-        createdAt: new Date(),
-      }),
-    })
-      .then(() => {
-        toast.success("File Saved!");
-        console.log("File added to user:", currentUserId);
+    if (isLoggedIn) {
+      const usersRef = collection(db, "users");
+      const userDocRef = doc(usersRef, currentUserId);
+      console.log(currentUserId);
+      updateDoc(userDocRef, {
+        file: arrayUnion({
+          filename: currentFileName,
+          html: html,
+          css: css,
+          js: javascript,
+          createdAt: new Date(),
+        }),
       })
-      .catch((error) => {
-        toast.error("Something went wrong!");
-        console.error("Error adding file to user:", error);
-      });
+        .then(() => {
+          toast.success("File Saved!");
+          fetchFiles();
+          console.log("File added to user:", currentUserId);
+        })
+        .catch((error) => {
+          toast.error("Something went wrong!");
+          console.error("Error adding file to user:", error);
+        });
+    }else{
+      toast("Login to save the file!");
+    }
   };
   return (
     <div className="bg-[#205295] px-4 sm:px-10 py-2 sm:py-3 flex justify-between">
@@ -62,12 +66,12 @@ const FileInfoBar = ({
           {isEdit ? (
             <input
               type="text"
-              value={filename}
+              value={currentFileName}
               className="text-black border-0 m-0 pl-2 w-1/2"
-              onChange={(e) => setFilename(e.target.value)}
+              onChange={(e) => setCurrentFileName(e.target.value)}
             />
           ) : (
-            filename
+            currentFileName
           )}
           <button className="text-white" onClick={() => setIsEdit(!isEdit)}>
             {isEdit ? <MdDone size={20} /> : <MdEdit size={20} />}

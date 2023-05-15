@@ -9,7 +9,8 @@ import FileOpenerModal from "./components/Modals/FileOpenerModal.jsx";
 import LoginModal from "./components/Modals/LoginModal.jsx";
 import AIPrompt from "./components/AIPrompt.jsx";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase.js";
+import { auth, db } from "./firebase.js";
+import { collection, doc, getDoc } from "firebase/firestore";
 
 function App() {
   const [srcDoc, setSrcDoc] = useState();
@@ -21,16 +22,45 @@ function App() {
   const [isSignup, setIsSignup] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUserId, setCurrentUserId] = useState();
+  const [files, setFiles] = useState([]);
+  const [currentFileName, setCurrentFileName] = useState("Untitled");
+  const [prompt, setPrompt] = useState("");
+
+  const fetchFiles = () => {
+    console.log(currentUserId);
+    const usersRef = collection(db, "users");
+    const userDocRef = doc(usersRef, currentUserId);
+
+    getDoc(userDocRef)
+      .then((doc) => {
+        const f = doc.data().file;
+        setFiles(f);
+        console.log("Files for user", currentUserId, ":", f);
+      })
+      .catch((error) => {
+        console.error("Error retrieving files for user:", error);
+      });
+  };
+
+  const resetEditor = () => {
+    setCurrentFileName("Untitled");
+    setHtml("");
+    setCss("");
+    setJavascript("");
+    setPrompt("");
+    setCurrentUserId("");
+  };
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUserId(user.uid);
+        fetchFiles(currentUserId);
       } else {
         console.log("User logged out..");
       }
     });
-  }, []);
+  }, [currentUserId]);
 
   return (
     <div>
@@ -39,6 +69,7 @@ function App() {
         setIsSignup={setIsSignup}
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
+        resetEditor={resetEditor}
       />
       <FileInfoBar
         setIsModalOpen={setIsFileModalOpen}
@@ -46,12 +77,17 @@ function App() {
         css={css}
         javascript={javascript}
         currentUserId={currentUserId}
+        isLoggedIn={isLoggedIn}
+        fetchFiles={fetchFiles}
+        currentFileName={currentFileName}
+        setCurrentFileName={setCurrentFileName}
       />
       <AIPrompt
         setHtml={setHtml}
         setCss={setCss}
         setJavascript={setJavascript}
-        setSrcDoc={setSrcDoc}
+        prompt={prompt}
+        setPrompt={setPrompt}
       />
       <CodeSection
         html={html}
@@ -70,6 +106,8 @@ function App() {
         setHtml={setHtml}
         setCss={setCss}
         setJavascript={setJavascript}
+        files={files}
+        resetEditor={resetEditor}
       />
       <LoginModal
         isModalOpen={isLoginModalOpen}
