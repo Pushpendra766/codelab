@@ -7,13 +7,12 @@ import activity from "react-useanimations/lib/activity";
 import toast, { Toaster } from "react-hot-toast";
 
 const AIPrompt = (props) => {
-  const { setHtml, setCss, setJavascript, setSrcDoc } = props;
+  const { setHtml, setCss, setJavascript, prompt, setPrompt } = props;
   const openai = new OpenAIApi(
     new Configuration({
       apiKey: import.meta.env.VITE_API_KEY,
     })
   );
-  const [prompt, setPrompt] = useState();
   const [loading, setLoading] = useState(false);
   const handlePromptChange = (e) => {
     setPrompt(e.target.value);
@@ -68,13 +67,6 @@ const AIPrompt = (props) => {
       setCss(css);
       setJavascript(js);
     }
-
-    setSrcDoc(`
-      <html>
-        <body>${html}</body>
-        <style>${css}</style>
-        <script>${javascript}</script>
-      </html>`);
     setLoading(false);
   };
 
@@ -90,6 +82,15 @@ const AIPrompt = (props) => {
           placeholder="Describe element in words."
           value={prompt}
           onChange={handlePromptChange}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              if (prompt) {
+                searchCode(prompt);
+              } else {
+                toast("Please enter query first!", { duration: 1500 });
+              }
+            }
+          }}
         />
         <button
           className={`text-[#ffffff] bg-[#2C74B3] px-4 py-1 rounded-full font-semibold hover:bg-[#205295] flex gap-2 ${

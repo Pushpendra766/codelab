@@ -7,6 +7,8 @@ import {
 } from "firebase/auth";
 import { auth } from "../../firebase";
 import toast, { Toaster } from "react-hot-toast";
+import { db } from "../../firebase";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const LoginModal = ({
   isModalOpen,
@@ -21,6 +23,23 @@ const LoginModal = ({
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const initializeUserData = (userId) => {
+    // This function will initialize document for particular new user
+    const usersRef = collection(db, "users");
+
+    const userDocRef = doc(usersRef, userId);
+
+    setDoc(userDocRef, {
+      file: [],
+    })
+      .then(() => {
+        console.log("New user created!");
+      })
+      .catch((error) => {
+        console.error("Error creating new user:", error);
+      });
   };
 
   const handleLogin = (e) => {
@@ -53,6 +72,7 @@ const LoginModal = ({
     } else {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
+          initializeUserData(userCredential.user.uid);
           setIsModalOpen(false);
           toast.success("Account Created Successfully!");
           setIsLoggedIn(true);
