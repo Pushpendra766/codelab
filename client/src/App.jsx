@@ -106,6 +106,7 @@ function App() {
         setJavascript={setJavascript}
         files={files}
         resetEditor={resetEditor}
+        fetchFiles={fetchFiles}
       />
       <LoginModal
         isModalOpen={isLoginModalOpen}
