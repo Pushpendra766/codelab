@@ -61,6 +61,7 @@ const LoginModal = ({
         }
         setIsLoggingIn(false);
       });
+    
   };
 
   const handleSignup = (e) => {
@@ -70,12 +71,14 @@ const LoginModal = ({
         duration: 2000,
       });
     } else {
+      setIsLoggingIn(true);
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           initializeUserData(userCredential.user.uid);
           setIsModalOpen(false);
           toast.success("Account Created Successfully!");
           setIsLoggedIn(true);
+          setIsLoggingIn(false);
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -83,7 +86,9 @@ const LoginModal = ({
           } else {
             toast.error("Something went wrong!");
           }
+          setIsLoggingIn(false);
         });
+      
     }
   };
   return (
@@ -124,7 +129,7 @@ const LoginModal = ({
                   className="text-[#ffffff] bg-[#2C74B3] px-4 py-2 rounded-full font-semibold hover:bg-[#205295]"
                   type="submit"
                 >
-                  Sign Up
+                  {isLoggingIn ? "Signing in..." : "Sign Up"}
                 </button>
               </form>
             ) : (

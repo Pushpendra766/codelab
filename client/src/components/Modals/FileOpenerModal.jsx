@@ -4,6 +4,9 @@ import { GrClose } from "react-icons/gr";
 import { AiOutlineFolderOpen } from "react-icons/ai";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { IoMdAddCircle } from "react-icons/io";
+import { collection, doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { db } from "../../firebase";
+import toast from "react-hot-toast";
 
 const FileOpenerModal = ({
   isModalOpen,
@@ -13,6 +16,8 @@ const FileOpenerModal = ({
   setJavascript,
   files,
   resetEditor,
+  currentUserId,
+  fetchFiles,
 }) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -28,6 +33,22 @@ const FileOpenerModal = ({
     setCss(css);
     setJavascript(js);
     setIsModalOpen(false);
+  };
+
+  const handleDeleteFile = (file) => {
+    const usersRef = collection(db, "users");
+    const userDocRef = doc(usersRef, currentUserId);
+    updateDoc(userDocRef, {
+      file: arrayRemove(file),
+    })
+      .then(() => {
+        toast.success("File deleted!");
+        console.log("File removed from user:");
+        fetchFiles();
+      })
+      .catch((error) => {
+        console.error("Error removing file from user:", error);
+      });
   };
 
   return (
@@ -70,7 +91,10 @@ const FileOpenerModal = ({
                         >
                           <AiOutlineFolderOpen size={20} />
                         </button>
-                        <button className="bg-[#f24a44] text-white p-1 rounded-full">
+                        <button
+                          className="bg-[#f24a44] text-white p-1 rounded-full"
+                          onClick={() => handleDeleteFile(file)}
+                        >
                           <RiDeleteBin5Fill size={20} />
                         </button>
                       </div>
@@ -79,7 +103,7 @@ const FileOpenerModal = ({
                   </div>
                 );
               })}
-              {files.length === 0 && "No files found"}
+            {files.length === 0 && "No files found"}
           </div>
         </div>
       </Modal>

@@ -31,7 +31,6 @@ const FileInfoBar = ({
     if (isLoggedIn) {
       const usersRef = collection(db, "users");
       const userDocRef = doc(usersRef, currentUserId);
-      console.log(currentUserId);
       updateDoc(userDocRef, {
         file: arrayUnion({
           filename: currentFileName,

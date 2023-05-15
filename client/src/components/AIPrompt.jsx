@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { SiCodemagic } from "react-icons/si";
 import { Configuration, OpenAIApi } from "openai";
-import { javascript } from "@codemirror/lang-javascript";
 import UseAnimations from "react-useanimations";
 import activity from "react-useanimations/lib/activity";
 import toast, { Toaster } from "react-hot-toast";
@@ -79,7 +78,7 @@ const AIPrompt = (props) => {
         <input
           type="text"
           className="text-sm sm:text-base border-2 border-[#2C74B3] rounded-md pl-2 w-full"
-          placeholder="Describe element in words."
+          placeholder="Describe the element."
           value={prompt}
           onChange={handlePromptChange}
           onKeyDown={(e) => {
