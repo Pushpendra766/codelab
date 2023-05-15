@@ -3,7 +3,13 @@ import { VscFileCode } from "react-icons/vsc";
 import { MdEdit, MdDone } from "react-icons/md";
 import { BsFillCloudArrowUpFill } from "react-icons/bs";
 import { AiFillFolderOpen } from "react-icons/ai";
-import { doc, updateDoc, collection, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  updateDoc,
+  collection,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import toast from "react-hot-toast";
 
@@ -17,6 +23,9 @@ const FileInfoBar = ({
   fetchFiles,
   currentFileName,
   setCurrentFileName,
+  files,
+  fileCopy,
+  setFileCopy,
 }) => {
   const [isEdit, setIsEdit] = useState(false);
 
@@ -28,29 +37,55 @@ const FileInfoBar = ({
     }
   };
   const handleSave = async () => {
-    if (isLoggedIn) {
-      const usersRef = collection(db, "users");
-      const userDocRef = doc(usersRef, currentUserId);
+    const usersRef = collection(db, "users");
+    const userDocRef = doc(usersRef, currentUserId);
+
+    let alreadyExist = files.find((file) => file.filename === currentFileName);
+
+    if (fileCopy && fileCopy.filename === currentFileName) {
+      alreadyExist = false;
+    }
+
+    if (isLoggedIn && !alreadyExist) {
+      const newFile = {
+        filename: currentFileName,
+        html: html,
+        css: css,
+        js: javascript,
+        createdAt: new Date(),
+      };
       updateDoc(userDocRef, {
-        file: arrayUnion({
-          filename: currentFileName,
-          html: html,
-          css: css,
-          js: javascript,
-          createdAt: new Date(),
-        }),
+        file: arrayUnion(newFile),
       })
         .then(() => {
           toast.success("File Saved!");
           fetchFiles();
-          console.log("File added to user:", currentUserId);
+          setFileCopy(newFile);
         })
         .catch((error) => {
           toast.error("Something went wrong!");
           console.error("Error adding file to user:", error);
         });
-    }else{
-      toast("Login to save the file!");
+        
+      if (fileCopy) {
+        updateDoc(userDocRef, {
+          file: arrayRemove(fileCopy),
+        })
+          .then(() => {
+            console.log("Updating file...");
+            fetchFiles();
+          })
+          .catch((error) => {
+            console.error("Error removing file from user:", error);
+          });
+      }
+    } else {
+      {
+        !isLoggedIn && toast("Login to save the file!");
+      }
+      {
+        alreadyExist && toast.error("File with this name already exist!");
+      }
     }
   };
   return (

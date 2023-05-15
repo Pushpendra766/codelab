@@ -18,6 +18,8 @@ const FileOpenerModal = ({
   resetEditor,
   currentUserId,
   fetchFiles,
+  setFileCopy,
+  setCurrentFileName,
 }) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -26,12 +28,15 @@ const FileOpenerModal = ({
   const handleCreateNewFile = () => {
     resetEditor();
     setIsModalOpen(false);
+    setFileCopy("");
   };
 
-  const handleOpenFile = (html, css, js) => {
-    setHtml(html);
-    setCss(css);
-    setJavascript(js);
+  const handleOpenFile = (file) => {
+    setHtml(file.html);
+    setCss(file.css);
+    setJavascript(file.js);
+    setCurrentFileName(file.filename);
+    setFileCopy(file);
     setIsModalOpen(false);
   };
 
@@ -85,9 +90,7 @@ const FileOpenerModal = ({
                       <div className="flex gap-4">
                         <button
                           className="bg-[#007bff] text-white p-1 rounded-full"
-                          onClick={() =>
-                            handleOpenFile(file.html, file.css, file.js)
-                          }
+                          onClick={() => handleOpenFile(file)}
                         >
                           <AiOutlineFolderOpen size={20} />
                         </button>

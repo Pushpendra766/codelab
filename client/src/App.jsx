@@ -25,6 +25,7 @@ function App() {
   const [files, setFiles] = useState([]);
   const [currentFileName, setCurrentFileName] = useState("Untitled");
   const [prompt, setPrompt] = useState("");
+  const [fileCopy, setFileCopy] = useState("");
 
   const fetchFiles = () => {
     const usersRef = collection(db, "users");
@@ -79,6 +80,9 @@ function App() {
         fetchFiles={fetchFiles}
         currentFileName={currentFileName}
         setCurrentFileName={setCurrentFileName}
+        files={files}
+        fileCopy={fileCopy}
+        setFileCopy={setFileCopy}
       />
       <AIPrompt
         setHtml={setHtml}
@@ -107,6 +111,8 @@ function App() {
         files={files}
         resetEditor={resetEditor}
         fetchFiles={fetchFiles}
+        setFileCopy={setFileCopy}
+        setCurrentFileName={setCurrentFileName}
       />
       <LoginModal
         isModalOpen={isLoginModalOpen}
