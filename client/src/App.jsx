@@ -27,7 +27,6 @@ function App() {
   const [prompt, setPrompt] = useState("");
 
   const fetchFiles = () => {
-    console.log(currentUserId);
     const usersRef = collection(db, "users");
     const userDocRef = doc(usersRef, currentUserId);
 
@@ -35,7 +34,6 @@ function App() {
       .then((doc) => {
         const f = doc.data().file;
         setFiles(f);
-        console.log("Files for user", currentUserId, ":", f);
       })
       .catch((error) => {
         console.error("Error retrieving files for user:", error);
