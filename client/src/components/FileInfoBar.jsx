@@ -26,6 +26,9 @@ const FileInfoBar = ({
   files,
   fileCopy,
   setFileCopy,
+  setHtml,
+  setCss,
+  setJavascript,
 }) => {
   const [isEdit, setIsEdit] = useState(false);
 
@@ -49,6 +52,15 @@ const FileInfoBar = ({
     }
 
     if (isLoggedIn && !alreadyExist) {
+      {
+        html || setHtml("<!-- HTML -->");
+      }
+      {
+        css || setCss("/* CSS */");
+      }
+      {
+        javascript || setJavascript("// Javascript");
+      }
       const newFile = {
         filename: currentFileName,
         html: html,

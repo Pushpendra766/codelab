@@ -83,6 +83,9 @@ function App() {
         files={files}
         fileCopy={fileCopy}
         setFileCopy={setFileCopy}
+        setHtml={setHtml}
+        setCss={setCss}
+        setJavascript={setJavascript}
       />
       <AIPrompt
         setHtml={setHtml}
