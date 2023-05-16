@@ -40,8 +40,10 @@ const FileInfoBar = ({
     const usersRef = collection(db, "users");
     const userDocRef = doc(usersRef, currentUserId);
 
+    //check if file already exist
     let alreadyExist = files.find((file) => file.filename === currentFileName);
 
+    // fileCopy tells us that an existing file is being opened so it is already present to we will change alreadyExist to false
     if (fileCopy && fileCopy.filename === currentFileName) {
       alreadyExist = false;
     }
@@ -66,7 +68,7 @@ const FileInfoBar = ({
           toast.error("Something went wrong!");
           console.error("Error adding file to user:", error);
         });
-        
+
       if (fileCopy) {
         updateDoc(userDocRef, {
           file: arrayRemove(fileCopy),

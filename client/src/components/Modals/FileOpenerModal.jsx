@@ -20,6 +20,7 @@ const FileOpenerModal = ({
   fetchFiles,
   setFileCopy,
   setCurrentFileName,
+  setPrompt,
 }) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -38,6 +39,7 @@ const FileOpenerModal = ({
     setCurrentFileName(file.filename);
     setFileCopy(file);
     setIsModalOpen(false);
+    setPrompt("");
   };
 
   const handleDeleteFile = (file) => {
@@ -56,12 +58,19 @@ const FileOpenerModal = ({
       });
   };
 
+  const timeConversion = (unixTime) => {
+    const date = new Date(unixTime * 1000);
+    const finalTimeString =
+      date.toLocaleTimeString("en-US") + " " + date.toLocaleDateString("hi");
+    return finalTimeString;
+  };
+
   return (
     <div className="container mx-auto">
       <Modal isModalOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="bg-white p-6">
           <div className="flex justify-between mb-6">
-            <h2 className="text-xl font-bold">Open</h2>
+            <h2 className="text-xl font-bold">Open file</h2>
             <div className="flex gap-4">
               <button
                 className="bg-[#26a541] text-white py-1 px-3 rounded-full flex gap-1"
@@ -74,31 +83,33 @@ const FileOpenerModal = ({
               </button>
             </div>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             <hr />
             {files.length !== 0 &&
               files.map((file, i) => {
                 return (
                   <div key={i}>
-                    <div className="flex justify-between pb-2 cursor-default">
-                      <span>
+                    <div className="flex justify-between cursor-default pb-2">
+                      <span className="flex flex-col">
                         {i + 1}. {file.filename}
+                        <span className="text-sm text-[#a6a5a4] pl-3 flex gap-1">
+                          <span className="hidden sm:block">Modified : </span>
+                          {timeConversion(file?.createdAt?.seconds)}
+                        </span>
                       </span>
-                      <span className="text-sm text-[#a6a5a4]">
-                        {file?.createdAt?.seconds}
-                      </span>
+
                       <div className="flex gap-4">
                         <button
-                          className="bg-[#007bff] text-white p-1 rounded-full"
+                          className="bg-[#007bff] my-1.5 px-1.5 rounded-full text-white"
                           onClick={() => handleOpenFile(file)}
                         >
-                          <AiOutlineFolderOpen size={20} />
+                          <AiOutlineFolderOpen size={21} />
                         </button>
                         <button
-                          className="bg-[#f24a44] text-white p-1 rounded-full"
+                          className="bg-[#f24a44] my-1.5 px-1.5 rounded-full text-white"
                           onClick={() => handleDeleteFile(file)}
                         >
-                          <RiDeleteBin5Fill size={20} />
+                          <RiDeleteBin5Fill size={21} />
                         </button>
                       </div>
                     </div>

@@ -113,6 +113,7 @@ function App() {
         fetchFiles={fetchFiles}
         setFileCopy={setFileCopy}
         setCurrentFileName={setCurrentFileName}
+        setPrompt={setPrompt}
       />
       <LoginModal
         isModalOpen={isLoginModalOpen}
