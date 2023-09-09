@@ -7,10 +7,12 @@ import Output from "./components/Output.jsx";
 import FileInfoBar from "./components/FileInfoBar.jsx";
 import FileOpenerModal from "./components/Modals/FileOpenerModal.jsx";
 import LoginModal from "./components/Modals/LoginModal.jsx";
+import KeyGetterModal from "./components/Modals/KeyGetterModal.jsx";
 import AIPrompt from "./components/AIPrompt.jsx";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./firebase.js";
 import { collection, doc, getDoc } from "firebase/firestore";
+import Cookies from "js-cookie";
 
 function App() {
   const [srcDoc, setSrcDoc] = useState();
@@ -19,6 +21,7 @@ function App() {
   const [javascript, setJavascript] = useState();
   const [isFileModalOpen, setIsFileModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isKeyGetterModalOpen, setIsKeyGetterModalOpen] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUserId, setCurrentUserId] = useState();
@@ -26,7 +29,9 @@ function App() {
   const [currentFileName, setCurrentFileName] = useState("Untitled");
   const [prompt, setPrompt] = useState("");
   const [fileCopy, setFileCopy] = useState("");
-
+  const [openAIApiKey, setOpenAIApiKey] = useState(
+    Cookies.get("OPENAI_API_KEY")
+  );
   const fetchFiles = () => {
     const usersRef = collection(db, "users");
     const userDocRef = doc(usersRef, currentUserId);
@@ -93,6 +98,8 @@ function App() {
         setJavascript={setJavascript}
         prompt={prompt}
         setPrompt={setPrompt}
+        setIsKeyGetterModalOpen={setIsKeyGetterModalOpen}
+        openAIApiKey={openAIApiKey}
       />
       <CodeSection
         html={html}
@@ -124,6 +131,11 @@ function App() {
         isSignup={isSignup}
         setIsSignup={setIsSignup}
         setIsLoggedIn={setIsLoggedIn}
+      />
+      <KeyGetterModal
+        isModalOpen={isKeyGetterModalOpen}
+        setIsModalOpen={setIsKeyGetterModalOpen}
+        setOpenAIApiKey={setOpenAIApiKey}
       />
     </div>
   );
