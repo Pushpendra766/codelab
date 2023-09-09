@@ -4,14 +4,19 @@ import { Configuration, OpenAIApi } from "openai";
 import UseAnimations from "react-useanimations";
 import activity from "react-useanimations/lib/activity";
 import toast, { Toaster } from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const AIPrompt = (props) => {
-  const { setHtml, setCss, setJavascript, prompt, setPrompt } = props;
-  const openai = new OpenAIApi(
-    new Configuration({
-      apiKey: import.meta.env.VITE_API_KEY,
-    })
-  );
+  const {
+    setHtml,
+    setCss,
+    setJavascript,
+    prompt,
+    setPrompt,
+    setIsKeyGetterModalOpen,
+    openAIApiKey,
+  } = props;
+
   const [loading, setLoading] = useState(false);
   const handlePromptChange = (e) => {
     setPrompt(e.target.value);
@@ -21,6 +26,11 @@ const AIPrompt = (props) => {
 
   const searchCode = (prompt) => {
     setLoading(true);
+    const openai = new OpenAIApi(
+      new Configuration({
+        apiKey: openAIApiKey,
+      })
+    );
     // console.log("Prompt : ", prompt);
     openai
       .createChatCompletion({
@@ -97,7 +107,9 @@ const AIPrompt = (props) => {
           }`}
           onClick={() => {
             prompt
-              ? searchCode(prompt)
+              ? openAIApiKey
+                ? searchCode(prompt)
+                : setIsKeyGetterModalOpen(true)
               : toast("Please enter query first!", { duration: 1500 });
           }}
         >
