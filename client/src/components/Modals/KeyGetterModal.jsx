@@ -37,7 +37,7 @@ const KeyGetterModal = ({ isModalOpen, setIsModalOpen, setOpenAIApiKey }) => {
               not be sent to server. <br />* Due to change in OpenAI's API
               plans. I am not able to provide API key from my side at this time.{" "}
               <br />
-              *But you can avail the functionality by pasting your API Key.
+              * But you can avail the functionality by pasting your API Key.
               Sorry, for the inconvenience.
             </p>
             <button
