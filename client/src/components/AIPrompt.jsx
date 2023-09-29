@@ -93,11 +93,11 @@ const AIPrompt = (props) => {
           onChange={handlePromptChange}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              if (prompt) {
-                searchCode(prompt);
-              } else {
-                toast("Please enter query first!", { duration: 1500 });
-              }
+              prompt
+                ? openAIApiKey
+                  ? searchCode(prompt)
+                  : setIsKeyGetterModalOpen(true)
+                : toast("Please enter query first!", { duration: 1500 });
             }
           }}
         />
