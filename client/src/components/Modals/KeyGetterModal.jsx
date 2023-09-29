@@ -35,8 +35,10 @@ const KeyGetterModal = ({ isModalOpen, setIsModalOpen, setOpenAIApiKey }) => {
             <p className="text-sm text-[#7a7d7b]">
               * Your API key will be stored in your local cookies only. And will
               not be sent to server. <br />* Due to change in OpenAI's API
-              plans. We are not able to provide API key from our side at this time. We are
-              working on solving this.
+              plans. I am not able to provide API key from my side at this time.{" "}
+              <br />
+              *But you can avail the functionality by pasting your API Key.
+              Sorry, for the inconvenience.
             </p>
             <button
               className="text-[#ffffff] bg-[#2C74B3] px-4 py-2 rounded-full font-semibold hover:bg-[#205295]"
