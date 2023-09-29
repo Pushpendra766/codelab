@@ -6,7 +6,7 @@ The most important feature of Codelab is AI Integration in it, which provides th
 
 ## Demo
 
-![](https://github.com/Pushpendra766/codelab/blob/main/client/src/assets/codelab.gif)
+You can see video demo here - [Demo Video](https://youtu.be/7SDjIXXbKgU)
 
 ## Live Preview
 
